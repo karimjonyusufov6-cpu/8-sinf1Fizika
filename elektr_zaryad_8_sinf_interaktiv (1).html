@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>8-sinf fizika — Elektr zaryad</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:linear-gradient(135deg,#0f172a,#1e3a8a);color:#fff}
+header{padding:24px 16px;text-align:center;background:rgba(0,0,0,.25)}
+header h1{margin:0;font-size:clamp(25px,6vw,40px)}
+.container{max-width:1000px;margin:auto;padding:18px}
+.lesson{display:none;background:#fff;color:#172033;border-radius:22px;padding:22px;box-shadow:0 12px 35px rgba(0,0,0,.25)}
+.lesson.active{display:block}
+.card{background:#f1f5f9;border-radius:16px;padding:16px;margin:14px 0}
+button{border:0;border-radius:12px;padding:12px 17px;margin:5px;cursor:pointer;background:#2563eb;color:#fff;font-size:16px}
+button.secondary{background:#e2e8f0;color:#172033}
+button:disabled{opacity:.5;cursor:not-allowed}
+.nav{display:flex;justify-content:space-between;gap:10px;margin:18px 0}
+.badge{display:inline-block;padding:7px 12px;border-radius:20px;background:#dbeafe;margin:4px}
+.stage{background:#eef2ff;border-radius:18px;padding:18px;text-align:center;overflow:hidden}
+.ball{width:76px;height:76px;border-radius:50%;background:#ef4444;margin:22px auto;display:flex;align-items:center;justify-content:center;font-size:30px;transition:transform .8s}
+.paper{display:inline-flex;width:42px;height:30px;background:#fde68a;border-radius:6px;align-items:center;justify-content:center;margin:5px;transition:transform .8s}
+.paper.pulled{transform:translateX(65px) rotate(-8deg)}
+.electron-box{position:relative;height:150px;background:#dbeafe;border-radius:14px;overflow:hidden}
+.electron{position:absolute;width:14px;height:14px;border-radius:50%;background:#2563eb;animation:move 3s linear infinite}
+@keyframes move{from{left:-20px}to{left:100%}}
+.quiz-option{display:block;width:100%;text-align:left;background:#e2e8f0;color:#172033}
+.correct{background:#86efac!important}
+.wrong{background:#fca5a5!important}
+.score{font-size:22px;font-weight:bold;text-align:center}
+svg{max-width:100%;height:auto}
+@media(max-width:600px){.lesson{padding:16px}button{width:100%;margin:5px 0}.nav button{width:48%}}
+</style>
+</head>
+<body>
+
+<header>
+<h1>⚡ ELEKTR ZARYAD</h1>
+<p>8-sinf fizika • Interaktiv HTML5 dars</p>
+</header>
+
+<main class="container">
+
+<section class="lesson active">
+<h2>🎯 1-modul: Elektr hodisasi</h2>
+<div class="card">
+<h3>🔮 “Sehrli shar” simulyatsiyasi</h3>
+<p>Sharni sochga ishqalang. Keyin qog‘ozlarga yaqinlashtiring.</p>
+<div class="stage">
+<div id="ball" class="ball">🎈</div>
+<div>
+<span class="paper">📄</span><span class="paper">📄</span>
+<span class="paper">📄</span><span class="paper">📄</span>
+</div>
+<button onclick="rubBall()">⚡ Ishqalash</button>
+<button class="secondary" onclick="resetBall()">↻ Qayta</button>
+<p id="ballText"><b>Kuzatish:</b> avval sharni ishqalang.</p>
+</div>
+</div>
+<div class="card">
+<b>💡 Xulosa:</b> Ishqalanish natijasida elektronlar bir jismdan ikkinchisiga o‘tishi mumkin. Jism zaryadlanadi.
+</div>
+<div class="card">
+<span class="badge">+ Musbat</span>
+<span class="badge">− Manfiy</span>
+<p><b>Elektron</b> — manfiy zaryadli. <b>Proton</b> — musbat zaryadli.</p>
+<p>Bir xil zaryadlar — <b>itarishadi</b>. Har xil zaryadlar — <b>tortishadi</b>.</p>
+</div>
+</section>
+
+<section class="lesson">
+<h2>⚡ 2-modul: Elektronlarning ko‘chishi</h2>
+<div class="card">
+<p>Ishqalanish vaqtida elektronlar bir jismdan ikkinchisiga ko‘chishi mumkin.</p>
+<div class="stage">
+<svg viewBox="0 0 700 230" aria-label="Elektronlarning bir jismdan ikkinchisiga ko‘chishi">
+<rect x="20" y="50" width="250" height="130" rx="20" fill="#dbeafe" stroke="#64748b"/>
+<rect x="430" y="50" width="250" height="130" rx="20" fill="#dbeafe" stroke="#64748b"/>
+<text x="145" y="35" text-anchor="middle" font-weight="bold">Jism A</text>
+<text x="555" y="35" text-anchor="middle" font-weight="bold">Jism B</text>
+<text x="350" y="125" text-anchor="middle" font-size="35">→</text>
+<circle cx="100" cy="90" r="9" fill="#2563eb"/>
+<circle cx="160" cy="140" r="9" fill="#2563eb"/>
+<circle cx="225" cy="95" r="9" fill="#2563eb"/>
+<circle cx="485" cy="105" r="9" fill="#2563eb"/>
+<circle cx="550" cy="145" r="9" fill="#2563eb"/>
+<circle id="movingElectron" cx="235" cy="135" r="10" fill="#16a34a"/>
+</svg>
+<button onclick="transferElectron()">⚡ Elektronni ko‘chirish</button>
+<p id="transferText">Elektron harakatini kuzating.</p>
+</div>
+</div>
+<div class="card">
+<h3>🧠 Eslab qoling</h3>
+<p>Elektron olsa → <b>manfiy zaryadlanadi</b>.</p>
+<p>Elektron yo‘qotsa → <b>musbat zaryadlanadi</b>.</p>
+</div>
+</section>
+
+<section class="lesson">
+<h2>🔌 3-modul: Elektr o‘tkazgichlar</h2>
+<div class="card">
+<p>Elektr zaryadlarining nisbatan oson harakatlanishiga imkon beradigan moddalar <b>elektr o‘tkazgichlar</b> deyiladi.</p>
+<p><b>Mis, alyuminiy, temir, kumush, grafit</b> — o‘tkazgichlarga misol.</p>
+</div>
+<div class="stage">
+<h3>🔵 Metall ichidagi erkin elektronlar</h3>
+<div class="electron-box">
+<span class="electron" style="top:20px"></span>
+<span class="electron" style="top:60px;animation-delay:.7s"></span>
+<span class="electron" style="top:100px;animation-delay:1.4s"></span>
+<span class="electron" style="top:35px;animation-delay:2s"></span>
+</div>
+<p>🔵 Elektronlar metall ichida harakatlana oladi.</p>
+</div>
+<div class="card">
+<b>❓ Savol:</b> Elektr toki metall ichida nima sababdan oson harakatlanadi?<br><br>
+<b>Javob:</b> Metallarda erkin elektronlar mavjud.
+</div>
+</section>
+
+<section class="lesson">
+<h2>🧱 4-modul: O‘tkazgich va dielektrik</h2>
+<div class="card">
+<table style="width:100%;border-collapse:collapse">
+<tr><th style="padding:10px;border:1px solid #94a3b8">🟢 O‘tkazgichlar</th><th style="padding:10px;border:1px solid #94a3b8">🔴 Dielektriklar</th></tr>
+<tr><td style="padding:10px;border:1px solid #94a3b8">Mis</td><td style="padding:10px;border:1px solid #94a3b8">Rezina</td></tr>
+<tr><td style="padding:10px;border:1px solid #94a3b8">Alyuminiy</td><td style="padding:10px;border:1px solid #94a3b8">Plastmassa</td></tr>
+<tr><td style="padding:10px;border:1px solid #94a3b8">Temir</td><td style="padding:10px;border:1px solid #94a3b8">Shisha</td></tr>
+<tr><td style="padding:10px;border:1px solid #94a3b8">Kumush</td><td style="padding:10px;border:1px solid #94a3b8">Quruq yog‘och</td></tr>
+</table>
+</div>
+<div class="card">
+<h3>💡 Nega elektr simining ichi metall, tashqarisi plastmassa?</h3>
+<p>Metall qism elektr tokini o‘tkazadi. Plastmassa yoki rezina esa izolyatsiya va himoya vazifasini bajaradi.</p>
+</div>
+<div class="card">
+<h3>🎮 “O‘tkazgichmi yoki dielektrikmi?”</h3>
+<h2 id="material" style="text-align:center">MIS</h2>
+<button onclick="materialAnswer('o')">🟢 O‘tkazgich</button>
+<button class="secondary" onclick="materialAnswer('d')">🔴 Dielektrik</button>
+<p id="materialResult" style="text-align:center;font-weight:bold"></p>
+<p id="materialScore" style="text-align:center">Ball: 0</p>
+</div>
+</section>
+
+<section class="lesson">
+<h2>📝 5-modul: Mini-test</h2>
+<div id="quiz"></div>
+<div id="quizScore" class="score"></div>
+</section>
+
+<section class="lesson">
+<h2>🏆 Dars yakuni</h2>
+<div class="card">
+<h3>Bugun nimalarni bilib oldik?</h3>
+<ul>
+<li>Elektr zaryadi musbat va manfiy bo‘ladi.</li>
+<li>Elektron manfiy, proton musbat zaryadli.</li>
+<li>Bir xil zaryadlar itarishadi.</li>
+<li>Har xil zaryadlar tortishadi.</li>
+<li>Metallarda erkin elektronlar mavjud.</li>
+<li>O‘tkazgichlar tokni yaxshi o‘tkazadi.</li>
+<li>Dielektriklar tokni yomon o‘tkazadi.</li>
+</ul>
+</div>
+<div class="card">
+<h3>🏠 Uyga vazifa</h3>
+<p>Uyda elektr o‘tkazgich va dielektriklardan foydalaniladigan 10 ta buyumni topib, jadval tuzing.</p>
+</div>
+</section>
+
+<div class="nav">
+<button id="prev" class="secondary" onclick="prevLesson()">⬅ Orqaga</button>
+<button id="next" onclick="nextLesson()">Keyingi ➡</button>
+</div>
+<p id="pageInfo" style="text-align:center"></p>
+
+</main>
+
+<script>
+let current=0;
+const lessons=document.querySelectorAll('.lesson');
+
+function showLesson(){
+  lessons.forEach((x,i)=>x.classList.toggle('active',i===current));
+  document.getElementById('prev').disabled=current===0;
+  document.getElementById('next').disabled=current===lessons.length-1;
+  document.getElementById('pageInfo').textContent=`Bo‘lim ${current+1} / ${lessons.length}`;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function nextLesson(){if(current<lessons.length-1){current++;showLesson();}}
+function prevLesson(){if(current>0){current--;showLesson();}}
+
+function rubBall(){
+  document.querySelectorAll('.paper').forEach((p,i)=>setTimeout(()=>p.classList.add('pulled'),i*120));
+  document.getElementById('ball').style.transform='scale(1.08)';
+  document.getElementById('ballText').innerHTML='⚡ <b>Natija:</b> shar zaryadlandi va qog‘ozlarni tortmoqda!';
+}
+function resetBall(){
+  document.querySelectorAll('.paper').forEach(p=>p.classList.remove('pulled'));
+  document.getElementById('ball').style.transform='';
+  document.getElementById('ballText').textContent='Avval “Ishqalash” tugmasini bosing.';
+}
+function transferElectron(){
+  const e=document.getElementById('movingElectron');
+  e.animate([{cx:'235px'},{cx:'470px'}],{duration:1000,fill:'forwards'});
+  document.getElementById('transferText').textContent='⚡ Elektron A jismdan B jismga ko‘chdi!';
+}
+
+const materials=[
+['MIS','o'],['REZINA','d'],['ALYUMINIY','o'],['SHISHA','d'],
+['TEMIR','o'],['PLASTMASSA','d'],['KUMUSH','o'],['GRAFIT','o'],
+['QURUQ YOG‘OCH','d'],['TUZLI SUV','o'],['KERAMIKA','d'],
+['MIS SIM','o'],['REZINA QO‘LQOP','d'],['ALYUMINIY FOLGA','o'],
+['PLASTMASSA LINEYKA','d']
+];
+let mi=0,ms=0;
+function materialAnswer(ans){
+  if(mi>=materials.length)return;
+  if(ans===materials[mi][1]){
+    ms++;
+    document.getElementById('materialResult').textContent='✅ To‘g‘ri!';
+  }else{
+    document.getElementById('materialResult').textContent='❌ Noto‘g‘ri!';
+  }
+  document.getElementById('materialScore').textContent=`Ball: ${ms}`;
+  mi++;
+  if(mi<materials.length)document.getElementById('material').textContent=materials[mi][0];
+  else{
+    document.getElementById('material').textContent='🎉 O‘yin tugadi!';
+    document.querySelectorAll('[onclick^="materialAnswer"]').forEach(b=>b.disabled=true);
+  }
+}
+
+const questions=[
+['Elektr zaryadining nechta turi mavjud?',['1','2','3','4'],1],
+['Elektron qanday zaryadlangan?',['Musbat','Manfiy','Zaryadsiz'],1],
+['Proton qanday zaryadga ega?',['Musbat','Manfiy','Zaryadsiz'],0],
+['Bir xil zaryadlar qanday ta’sirlashadi?',['Tortishadi','Itarishadi','Ta’sirlashmaydi'],1],
+['Har xil zaryadlar qanday ta’sirlashadi?',['Itarishadi','Tortishadi','Yo‘qoladi'],1],
+['Qaysi biri o‘tkazgich?',['Rezina','Shisha','Mis','Plastmassa'],2],
+['Qaysi biri dielektrik?',['Mis','Kumush','Rezina','Temir'],2],
+['Metallarda elektr tokini tashuvchi zarrachalardan biri nima?',['Proton','Elektron','Neytron'],1],
+['Elektr zaryadining SI birligi nima?',['Volt','Amper','Kulon'],2],
+['Simning plastmassa qoplamasi nima uchun kerak?',['Tokni kuchaytirish','Himoya va izolyatsiya','Tok ishlab chiqarish'],1]
+];
+
+let qScore=0;
+const quiz=document.getElementById('quiz');
+questions.forEach((q,i)=>{
+  const box=document.createElement('div');
+  box.className='card';
+  const title=document.createElement('h3');
+  title.textContent=`${i+1}. ${q[0]}`;
+  box.appendChild(title);
+  q[1].forEach((opt,j)=>{
+    const b=document.createElement('button');
+    b.className='quiz-option';
+    b.textContent=opt;
+    b.onclick=()=>{
+      box.querySelectorAll('button').forEach(x=>x.disabled=true);
+      if(j===q[2]){b.classList.add('correct');qScore++}
+      else{b.classList.add('wrong');box.querySelectorAll('button')[q[2]].classList.add('correct')}
+      document.getElementById('quizScore').textContent=`Natija: ${qScore} / ${questions.length}`;
+    };
+    box.appendChild(b);
+  });
+  quiz.appendChild(box);
+});
+
+showLesson();
+</script>
+</body>
+</html>
